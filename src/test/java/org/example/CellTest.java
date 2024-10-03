@@ -59,10 +59,8 @@ class CellTest {
         Cell aliveCell = new Cell(CellStatus.ALIVE, 1, 2);
         Cell deadCell = new Cell(CellStatus.DEAD, 2, 0);
 
-        // 2 alive neighbors
         int aliveNeighbors = 2;
 
-        // Since isAlive() returns a boolean, check for true/false directly
         assertTrue(aliveCell.nextGenerationState(aliveNeighbors).isAlive());
         assertFalse(deadCell.nextGenerationState(aliveNeighbors).isAlive());
     }

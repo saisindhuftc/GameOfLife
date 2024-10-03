@@ -30,7 +30,6 @@ public class Cell {
         }
     }
 
-    // No need for the getter method anymore
     public boolean isAlive() {
         return this.cellStatus == CellStatus.ALIVE;
     }
