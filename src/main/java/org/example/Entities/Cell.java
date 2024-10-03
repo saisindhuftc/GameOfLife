@@ -1,9 +1,8 @@
-package org.example;
+package org.example.Entities;
 
 import org.example.Enums.CellStatus;
 import org.example.Exceptions.InvalidInputException;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Cell {
@@ -21,25 +20,19 @@ public class Cell {
         this.cellStatus = cellStatus;
     }
 
-    private int countAliveNeighbours(List<Cell> neighbours) {
-        int count = 0;
-        for(Cell neighbour : neighbours) {
-            if(neighbour.cellStatus == CellStatus.ALIVE)
-                count++;
+    public Cell nextGenerationState(int aliveNeighbors) {
+        if(cellStatus == CellStatus.ALIVE && (aliveNeighbors == 2 || aliveNeighbors == 3)){
+            return new Cell(CellStatus.ALIVE, this.row, this.column);
+        } else if(cellStatus == CellStatus.DEAD && aliveNeighbors == 3) {
+            return new Cell(CellStatus.ALIVE, this.row, this.column);
+        } else {
+            return new Cell(CellStatus.DEAD, this.row, this.column);
         }
-        return count;
     }
 
-    public Cell nextGenerationState(List<Cell> neighbours) {
-        int aliveNeighbors = countAliveNeighbours(neighbours);
-        if(cellStatus.equals(CellStatus.ALIVE) && aliveNeighbors==2 || aliveNeighbors==3){
-            return new Cell(CellStatus.ALIVE,this.row,this.column);
-        }
-        return new Cell(CellStatus.DEAD,this.row,this.column);
-    }
-
-    public CellStatus getCellStatus() {
-        return this.cellStatus;
+    // No need for the getter method anymore
+    public boolean isAlive() {
+        return this.cellStatus == CellStatus.ALIVE;
     }
 
     @Override

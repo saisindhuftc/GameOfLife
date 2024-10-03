@@ -1,11 +1,10 @@
 package org.example;
 
 import static org.junit.jupiter.api.Assertions.*;
-import org.example.Neighbours;
+import org.example.Entities.Neighbours;
 import org.example.Exceptions.InvalidInputException;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

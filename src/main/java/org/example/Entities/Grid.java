@@ -1,10 +1,9 @@
-package org.example;
+package org.example.Entities;
 
 import org.example.Enums.CellStatus;
 import org.example.Exceptions.InvalidInputException;
 import org.example.Exceptions.PercentageInputException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -40,7 +39,7 @@ public class Grid {
         int aliveCells = 0;
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
-                if (grid[i][j].getCellStatus() == CellStatus.ALIVE) {
+                if (grid[i][j].isAlive()) {
                     aliveCells++;
                 }
             }
@@ -49,25 +48,32 @@ public class Grid {
     }
 
     public void nextGeneration() {
-        Cell[][] newgrid = new Cell[grid.length][grid[0].length];
+        Cell[][] newGrid = new Cell[grid.length][grid[0].length];
 
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
                 List<int[]> neighboursCoords = new Neighbours(i, j).validNeighboursCoordinates(grid.length, grid[0].length);
-                List<Cell> neighbours = new ArrayList<>();
-                for (int[] coords : neighboursCoords) {
-                    neighbours.add(grid[coords[0]][coords[1]]);
-                }
-                newgrid[i][j] = grid[i][j].nextGenerationState(neighbours);
+                int aliveNeighbors = countAliveNeighbours(neighboursCoords);
+                newGrid[i][j] = grid[i][j].nextGenerationState(aliveNeighbors);
             }
         }
-        this.grid = newgrid;
+        this.grid = newGrid;
+    }
+
+    private int countAliveNeighbours(List<int[]> neighboursCoords) {
+        int aliveCount = 0;
+        for (int[] coords : neighboursCoords) {
+            if (grid[coords[0]][coords[1]].isAlive()) {
+                aliveCount++;
+            }
+        }
+        return aliveCount;
     }
 
     public void printGrid() {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
-                if (grid[i][j].getCellStatus() == CellStatus.ALIVE) {
+                if (grid[i][j].isAlive()) {
                     System.out.print('*');
                 } else {
                     System.out.print('-');

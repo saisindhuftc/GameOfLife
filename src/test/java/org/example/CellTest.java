@@ -1,13 +1,9 @@
 package org.example;
-import org.example.Cell;
+
+import org.example.Entities.Cell;
 import org.example.Enums.CellStatus;
 import org.example.Exceptions.InvalidInputException;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class CellTest {
@@ -15,7 +11,6 @@ class CellTest {
     @Test
     void testCanNotCreateNewCellWithNegativeRows() {
         assertThrows(InvalidInputException.class, () -> new Cell(CellStatus.ALIVE, -1, 5));
-
     }
 
     @Test
@@ -24,63 +19,52 @@ class CellTest {
     }
 
     @Test
-    public void testDeadCellWillBecameAliveIfItHas3AliveNeighbours() {
+    void testDeadCellBecomesAliveWith3AliveNeighbors() {
         Cell deadCell = new Cell(CellStatus.DEAD, 3, 3);
-        List<Cell> neighbours = new ArrayList<>();
+        int aliveNeighbors = 3;
 
-        neighbours.add(new Cell(CellStatus.ALIVE, 2, 1));
-        neighbours.add(new Cell(CellStatus.ALIVE, 1, 2));
-        neighbours.add(new Cell(CellStatus.ALIVE, 1, 1));
-
-        assertEquals(deadCell.nextGenerationState(neighbours), new Cell(CellStatus.ALIVE, 3, 3));
+        Cell nextState = deadCell.nextGenerationState(aliveNeighbors);
+        assertEquals(new Cell(CellStatus.ALIVE, 3, 3), nextState);
     }
 
     @Test
-    public void testAliveCellWillRemainAliveIfItHas2AliveNeighbours() {
+    void testAliveCellRemainsAliveWith2AliveNeighbors() {
         Cell aliveCell = new Cell(CellStatus.ALIVE, 3, 3);
-        List<Cell> neighbours = new ArrayList<>();
+        int aliveNeighbors = 2;
 
-        neighbours.add(new Cell(CellStatus.ALIVE, 0, 1));
-        neighbours.add(new Cell(CellStatus.ALIVE, 1, 0));
-
-        assertEquals(aliveCell.nextGenerationState(neighbours), new Cell(CellStatus.ALIVE, 3, 3));
+        Cell nextState = aliveCell.nextGenerationState(aliveNeighbors);
+        assertEquals(new Cell(CellStatus.ALIVE, 3, 3), nextState);
     }
 
     @Test
-    public void testAliveCellHasLessThan2AliveNeighboursItWillBecameDead() {
+    void testAliveCellDiesWithLessThan2AliveNeighbors() {
         Cell aliveCell = new Cell(CellStatus.ALIVE, 2, 2);
-        List<Cell> neighbours = new ArrayList<>();
+        int aliveNeighbors = 1;
 
-        neighbours.add(new Cell(CellStatus.ALIVE, 0, 1));
-
-        assertEquals(aliveCell.nextGenerationState(neighbours), new Cell(CellStatus.DEAD, 2, 2));
+        Cell nextState = aliveCell.nextGenerationState(aliveNeighbors);
+        assertEquals(new Cell(CellStatus.DEAD, 2, 2), nextState);
     }
 
     @Test
-    public void testAliveCellWillBecameDeadIfItHas4LiveNeighbours() {
+    void testAliveCellDiesWithMoreThan3AliveNeighbors() {
         Cell aliveCell = new Cell(CellStatus.ALIVE, 1, 1);
-        List<Cell> neighbours = new ArrayList<>();
+        int aliveNeighbors = 4;
 
-        neighbours.add(new Cell(CellStatus.ALIVE, 0, 0));
-        neighbours.add(new Cell(CellStatus.ALIVE, 0, 1));
-        neighbours.add(new Cell(CellStatus.ALIVE, 0, 2));
-        neighbours.add(new Cell(CellStatus.ALIVE, 1, 2));
-
-        assertEquals(aliveCell.nextGenerationState(neighbours), new Cell(CellStatus.DEAD, 1, 1));
+        Cell nextState = aliveCell.nextGenerationState(aliveNeighbors);
+        assertEquals(new Cell(CellStatus.DEAD, 1, 1), nextState);
     }
 
     @Test
-    void testNextGenerationState() {
-        Cell aliveCell = new Cell(CellStatus.ALIVE, 0, 0);
-        Cell deadCell = new Cell(CellStatus.DEAD, 0, 0);
+    void testNextGenerationStateForMixedNeighbors() {
+        Cell aliveCell = new Cell(CellStatus.ALIVE, 1, 2);
+        Cell deadCell = new Cell(CellStatus.DEAD, 2, 0);
 
-        List<Cell> neighbours = Arrays.asList(
-                new Cell(CellStatus.ALIVE, 0, 1),
-                new Cell(CellStatus.ALIVE, 1, 0),
-                new Cell(CellStatus.DEAD, 1, 1)
-        );
+        // 2 alive neighbors
+        int aliveNeighbors = 2;
 
-        assertEquals(CellStatus.ALIVE, aliveCell.nextGenerationState(neighbours).getCellStatus());
-        assertEquals(CellStatus.DEAD, deadCell.nextGenerationState(neighbours).getCellStatus());
+        // Since isAlive() returns a boolean, check for true/false directly
+        assertTrue(aliveCell.nextGenerationState(aliveNeighbors).isAlive());
+        assertFalse(deadCell.nextGenerationState(aliveNeighbors).isAlive());
     }
+
 }

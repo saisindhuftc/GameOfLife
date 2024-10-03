@@ -1,10 +1,11 @@
 package org.example;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import org.example.Entities.Grid;
 import org.example.Exceptions.InvalidInputException;
 import org.example.Exceptions.PercentageInputException;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class GridTest {
 
@@ -103,12 +104,17 @@ class GridTest {
     }
 
     @Test
-    void testNextGeneration() throws InvalidInputException {
+    void testNextGeneration1() throws InvalidInputException {
         Grid grid = new Grid(5, 5);
         grid.seedRandomCells(50, 5, 5);
+
         int initialAliveCells = grid.countAliveCells();
+
         grid.nextGeneration();
 
-        assertNotEquals(initialAliveCells, grid.countAliveCells());
+        int newAliveCells = grid.countAliveCells();
+
+        assertNotEquals(initialAliveCells, newAliveCells);
     }
 }
+
