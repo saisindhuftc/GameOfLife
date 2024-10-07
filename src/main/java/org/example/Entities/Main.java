@@ -15,9 +15,9 @@ public class Main {
         System.out.print("Enter seeding percentage (1-100): ");
         int percentage = scanner.nextInt();
 
-        Grid board = new Grid(rows, cols);
-        board.seedRandomCells(percentage, rows, cols);
-        board.printGrid(); // Print after seeding
+        Grid grid = new Grid(rows, cols);
+        grid.seedRandomCells(percentage);
+        grid.printGrid();
 
         scanner.nextLine();
         while (true) {
@@ -28,10 +28,10 @@ public class Main {
                 break;
             }
 
-            board.nextGeneration();
-            board.printGrid();
+            grid.nextGeneration();
+            grid.printGrid();
 
-            if (board.countAliveCells() == 0) {
+            if (grid.countAliveCells() == 0) {
                 System.out.println("All cells are dead. Simulation ended.");
                 break;
             }

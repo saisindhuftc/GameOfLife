@@ -4,6 +4,7 @@ import org.example.Entities.Cell;
 import org.example.Enums.CellStatus;
 import org.example.Exceptions.InvalidInputException;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CellTest {
@@ -20,49 +21,117 @@ class CellTest {
 
     @Test
     void testDeadCellBecomesAliveWith3AliveNeighbors() {
-        Cell deadCell = new Cell(CellStatus.DEAD, 3, 3);
-        int aliveNeighbors = 3;
+        // Create a 3x3 grid
+        Cell[][] grid = new Cell[3][3];
 
-        Cell nextState = deadCell.nextGenerationState(aliveNeighbors);
-        assertEquals(new Cell(CellStatus.ALIVE, 3, 3), nextState);
+        // Set up the grid with 3 alive neighbors around the dead cell at (1, 1)
+        grid[0][0] = new Cell(CellStatus.ALIVE, 0, 0);
+        grid[0][1] = new Cell(CellStatus.ALIVE, 0, 1);
+        grid[0][2] = new Cell(CellStatus.DEAD, 0, 2);
+        grid[1][0] = new Cell(CellStatus.ALIVE, 1, 0);
+        grid[1][1] = new Cell(CellStatus.DEAD, 1, 1); // Dead cell to be tested
+        grid[1][2] = new Cell(CellStatus.DEAD, 1, 2);
+        grid[2][0] = new Cell(CellStatus.DEAD, 2, 0);
+        grid[2][1] = new Cell(CellStatus.DEAD, 2, 1);
+        grid[2][2] = new Cell(CellStatus.DEAD, 2, 2);
+
+        // Get the dead cell's next generation state
+        Cell deadCell = grid[1][1];
+        Cell nextState = deadCell.nextGenerationState(grid);
+
+        // Assert that the dead cell becomes alive
+        assertEquals(new Cell(CellStatus.ALIVE, 1, 1), nextState);
     }
 
     @Test
     void testAliveCellRemainsAliveWith2AliveNeighbors() {
-        Cell aliveCell = new Cell(CellStatus.ALIVE, 3, 3);
-        int aliveNeighbors = 2;
+        Cell[][] grid = new Cell[3][3];
+        grid[0][0] = new Cell(CellStatus.ALIVE, 0, 0);
+        grid[0][1] = new Cell(CellStatus.ALIVE, 0, 1);
+        grid[0][2] = new Cell(CellStatus.DEAD, 0, 2);
+        grid[1][0] = new Cell(CellStatus.DEAD, 1, 0);
+        grid[1][1] = new Cell(CellStatus.ALIVE, 1, 1);
+        grid[1][2] = new Cell(CellStatus.DEAD, 1, 2);
+        grid[2][0] = new Cell(CellStatus.ALIVE, 2, 0);
+        grid[2][1] = new Cell(CellStatus.DEAD, 2, 1);
+        grid[2][2] = new Cell(CellStatus.DEAD, 2, 2);
 
-        Cell nextState = aliveCell.nextGenerationState(aliveNeighbors);
-        assertEquals(new Cell(CellStatus.ALIVE, 3, 3), nextState);
+        Cell aliveCell = grid[1][1];
+        Cell nextState = aliveCell.nextGenerationState(grid);
+        assertEquals(new Cell(CellStatus.ALIVE, 1, 1), nextState);
     }
 
     @Test
     void testAliveCellDiesWithLessThan2AliveNeighbors() {
-        Cell aliveCell = new Cell(CellStatus.ALIVE, 2, 2);
-        int aliveNeighbors = 1;
+        Cell[][] grid = new Cell[3][3];
+        grid[0][0] = new Cell(CellStatus.ALIVE, 0, 0);
+        grid[0][1] = new Cell(CellStatus.DEAD, 0, 1);
+        grid[0][2] = new Cell(CellStatus.DEAD, 0, 2);
+        grid[1][0] = new Cell(CellStatus.DEAD, 1, 0);
+        grid[1][1] = new Cell(CellStatus.ALIVE, 1, 1);
+        grid[1][2] = new Cell(CellStatus.DEAD, 1, 2);
+        grid[2][0] = new Cell(CellStatus.DEAD, 2, 0);
+        grid[2][1] = new Cell(CellStatus.DEAD, 2, 1);
+        grid[2][2] = new Cell(CellStatus.DEAD, 2, 2);
 
-        Cell nextState = aliveCell.nextGenerationState(aliveNeighbors);
-        assertEquals(new Cell(CellStatus.DEAD, 2, 2), nextState);
+        Cell aliveCell = grid[1][1];
+        Cell nextState = aliveCell.nextGenerationState(grid);
+        assertEquals(new Cell(CellStatus.DEAD, 1, 1), nextState);
     }
 
     @Test
     void testAliveCellDiesWithMoreThan3AliveNeighbors() {
-        Cell aliveCell = new Cell(CellStatus.ALIVE, 1, 1);
-        int aliveNeighbors = 4;
+        Cell[][] grid = new Cell[3][3];
+        grid[0][0] = new Cell(CellStatus.ALIVE, 0, 0);
+        grid[0][1] = new Cell(CellStatus.ALIVE, 0, 1);
+        grid[0][2] = new Cell(CellStatus.ALIVE, 0, 2);
+        grid[1][0] = new Cell(CellStatus.ALIVE, 1, 0);
+        grid[1][1] = new Cell(CellStatus.ALIVE, 1, 1);
+        grid[1][2] = new Cell(CellStatus.DEAD, 1, 2);
+        grid[2][0] = new Cell(CellStatus.ALIVE, 2, 0);
+        grid[2][1] = new Cell(CellStatus.ALIVE, 2, 1);
+        grid[2][2] = new Cell(CellStatus.ALIVE, 2, 2);
 
-        Cell nextState = aliveCell.nextGenerationState(aliveNeighbors);
+        Cell aliveCell = grid[1][1];
+        Cell nextState = aliveCell.nextGenerationState(grid);
         assertEquals(new Cell(CellStatus.DEAD, 1, 1), nextState);
     }
 
     @Test
     void testNextGenerationStateForMixedNeighbors() {
-        Cell aliveCell = new Cell(CellStatus.ALIVE, 1, 2);
-        Cell deadCell = new Cell(CellStatus.DEAD, 2, 0);
+        Cell[][] grid = new Cell[3][3];
+        grid[0][0] = new Cell(CellStatus.ALIVE, 0, 0);
+        grid[0][1] = new Cell(CellStatus.DEAD, 0, 1);
+        grid[0][2] = new Cell(CellStatus.ALIVE, 0, 2);
+        grid[1][0] = new Cell(CellStatus.DEAD, 1, 0);
+        grid[1][1] = new Cell(CellStatus.ALIVE, 1, 1);
+        grid[1][2] = new Cell(CellStatus.DEAD, 1, 2);
+        grid[2][0] = new Cell(CellStatus.ALIVE, 2, 0);
+        grid[2][1] = new Cell(CellStatus.DEAD, 2, 1);
+        grid[2][2] = new Cell(CellStatus.ALIVE, 2, 2);
 
-        int aliveNeighbors = 2;
+        Cell aliveCell = grid[1][1];
+        Cell deadCell = grid[1][0];
 
-        assertTrue(aliveCell.nextGenerationState(aliveNeighbors).isAlive());
-        assertFalse(deadCell.nextGenerationState(aliveNeighbors).isAlive());
+        assertTrue(deadCell.nextGenerationState(grid).isAlive());
+        assertFalse(aliveCell.nextGenerationState(grid).isAlive());
     }
 
+    @Test
+    public void testCountAliveNeighbours() {
+        Cell[][] grid = new Cell[3][3];
+        grid[0][0] = new Cell(CellStatus.ALIVE, 0, 0);
+        grid[0][1] = new Cell(CellStatus.DEAD, 0, 1);
+        grid[0][2] = new Cell(CellStatus.ALIVE, 0, 2);
+        grid[1][0] = new Cell(CellStatus.DEAD, 1, 0);
+        grid[1][1] = new Cell(CellStatus.ALIVE, 1, 1);
+        grid[1][2] = new Cell(CellStatus.DEAD, 1, 2);
+        grid[2][0] = new Cell(CellStatus.ALIVE, 2, 0);
+        grid[2][1] = new Cell(CellStatus.DEAD, 2, 1);
+        grid[2][2] = new Cell(CellStatus.ALIVE, 2, 2);
+
+        Cell cell = grid[1][1];
+        int aliveNeighbours = cell.countAliveNeighbours(grid);
+        assertEquals(4, aliveNeighbours);
+    }
 }

@@ -54,14 +54,14 @@ class GridTest {
 
         assertThrows(PercentageInputException.class, () -> {
             Grid grid = new Grid(rows, cols);
-            grid.seedRandomCells(seedingPercentage, rows, cols);
+            grid.seedRandomCells(seedingPercentage);
         });
     }
 
     @Test
     public void testFor2x2GridWithOneAliveCellNextGenerationWillBeAllDead() throws InvalidInputException {
         Grid grid = new Grid(2, 2);
-        grid.seedRandomCells(25, 2, 2);
+        grid.seedRandomCells(25);
 
         assertEquals(1, grid.countAliveCells());
 
@@ -73,7 +73,7 @@ class GridTest {
     @Test
     public void testFor3x3GridWithOneAliveCellNextGenerationWillBeAllDead() throws InvalidInputException {
         Grid grid = new Grid(3, 3);
-        grid.seedRandomCells(15, 3, 3);
+        grid.seedRandomCells(15);
 
         assertEquals(1, grid.countAliveCells());
 
@@ -85,7 +85,7 @@ class GridTest {
     @Test
     public void testFor4x4GridWithOneAliveCellNextGenerationWillBeAllDead() throws InvalidInputException {
         Grid grid = new Grid(4, 4);
-        grid.seedRandomCells(10, 4, 4);
+        grid.seedRandomCells(10);
 
         assertEquals(1, grid.countAliveCells());
 
@@ -98,15 +98,15 @@ class GridTest {
     void testSeedRandomCells() throws InvalidInputException {
         Grid grid = new Grid(5, 5);
 
-        assertThrows(PercentageInputException.class, () -> grid.seedRandomCells(0, 5, 5));
-        assertThrows(PercentageInputException.class, () -> grid.seedRandomCells(101, 5, 5));
-        assertDoesNotThrow(() -> grid.seedRandomCells(50, 5, 5));
+        assertThrows(PercentageInputException.class, () -> grid.seedRandomCells(0));
+        assertThrows(PercentageInputException.class, () -> grid.seedRandomCells(101));
+        assertDoesNotThrow(() -> grid.seedRandomCells(50));
     }
 
     @Test
     void testNextGeneration1() throws InvalidInputException {
         Grid grid = new Grid(5, 5);
-        grid.seedRandomCells(50, 5, 5);
+        grid.seedRandomCells(50);
 
         int initialAliveCells = grid.countAliveCells();
 

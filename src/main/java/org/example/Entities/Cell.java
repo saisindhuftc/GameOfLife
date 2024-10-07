@@ -3,6 +3,7 @@ package org.example.Entities;
 import org.example.Enums.CellStatus;
 import org.example.Exceptions.InvalidInputException;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Cell {
@@ -20,10 +21,11 @@ public class Cell {
         this.cellStatus = cellStatus;
     }
 
-    public Cell nextGenerationState(int aliveNeighbors) {
-        if(cellStatus == CellStatus.ALIVE && (aliveNeighbors == 2 || aliveNeighbors == 3)){
+    public Cell nextGenerationState(Cell[][] grid) {
+        int aliveNeighbors = countAliveNeighbours(grid);
+        if (cellStatus == CellStatus.ALIVE && (aliveNeighbors == 2 || aliveNeighbors == 3)) {
             return new Cell(CellStatus.ALIVE, this.row, this.column);
-        } else if(cellStatus == CellStatus.DEAD && aliveNeighbors == 3) {
+        } else if (cellStatus == CellStatus.DEAD && aliveNeighbors == 3) {
             return new Cell(CellStatus.ALIVE, this.row, this.column);
         } else {
             return new Cell(CellStatus.DEAD, this.row, this.column);
@@ -34,16 +36,30 @@ public class Cell {
         return this.cellStatus == CellStatus.ALIVE;
     }
 
+    public int countAliveNeighbours(Cell[][] grid) {
+        List<int[]> neighboursCoords = new Neighbours(this.row, this.column)
+                .validNeighboursCoordinates(grid.length, grid[0].length);
+        int aliveCount = 0;
+        for (int[] coords : neighboursCoords) {
+            if (grid[coords[0]][coords[1]].isAlive()) {
+                aliveCount++;
+            }
+        }
+        return aliveCount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Cell)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Cell cell = (Cell) o;
-        return row == cell.row && column == cell.column && cellStatus == cell.cellStatus;
+        return row == cell.row &&
+                column == cell.column &&
+                cellStatus == cell.cellStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(row, column, cellStatus);
+        return Objects.hash(cellStatus, row, column);
     }
 }

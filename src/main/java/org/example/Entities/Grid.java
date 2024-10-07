@@ -4,11 +4,10 @@ import org.example.Enums.CellStatus;
 import org.example.Exceptions.InvalidInputException;
 import org.example.Exceptions.PercentageInputException;
 
-import java.util.List;
 import java.util.Random;
 
 public class Grid {
-    private Cell[][] grid;
+    private final Cell[][] grid;
 
     public Grid(int rows, int columns) throws InvalidInputException {
         if (rows <= 0 || columns <= 0) {
@@ -17,15 +16,15 @@ public class Grid {
         this.grid = new Cell[rows][columns];
     }
 
-    public void seedRandomCells(int percentage, int rows, int cols) {
+    public void seedRandomCells(int percentage) {
         if (percentage <= 0 || percentage > 100) {
             throw new PercentageInputException("Percentage must be between 1 and 100");
         }
-        int aliveCellCount = (rows * cols) * percentage / 100;
+        int aliveCellCount = (grid.length * grid[0].length) * percentage / 100;
         Random random = new Random();
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
-                if (random.nextInt(2) == 1 && aliveCellCount > 0) {
+                if (random.nextInt(100) < percentage && aliveCellCount > 0) {
                     grid[i][j] = new Cell(CellStatus.ALIVE, i, j);
                     aliveCellCount--;
                 } else {
@@ -37,9 +36,9 @@ public class Grid {
 
     public int countAliveCells() {
         int aliveCells = 0;
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[i].length; j++) {
-                if (grid[i][j].isAlive()) {
+        for (Cell[] cells : grid) {
+            for (Cell cell : cells) {
+                if (cell.isAlive()) {
                     aliveCells++;
                 }
             }
@@ -49,35 +48,18 @@ public class Grid {
 
     public void nextGeneration() {
         Cell[][] newGrid = new Cell[grid.length][grid[0].length];
-
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
-                List<int[]> neighboursCoords = new Neighbours(i, j).validNeighboursCoordinates(grid.length, grid[0].length);
-                int aliveNeighbors = countAliveNeighbours(neighboursCoords);
-                newGrid[i][j] = grid[i][j].nextGenerationState(aliveNeighbors);
+                newGrid[i][j] = grid[i][j].nextGenerationState(grid);
             }
         }
-        this.grid = newGrid;
-    }
-
-    private int countAliveNeighbours(List<int[]> neighboursCoords) {
-        int aliveCount = 0;
-        for (int[] coords : neighboursCoords) {
-            if (grid[coords[0]][coords[1]].isAlive()) {
-                aliveCount++;
-            }
-        }
-        return aliveCount;
+        System.arraycopy(newGrid, 0, grid, 0, grid.length);
     }
 
     public void printGrid() {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[i].length; j++) {
-                if (grid[i][j].isAlive()) {
-                    System.out.print('*');
-                } else {
-                    System.out.print('-');
-                }
+        for (Cell[] cells : grid) {
+            for (Cell cell : cells) {
+                System.out.print(cell.isAlive() ? '*' : '-');
             }
             System.out.println();
         }
