@@ -30,7 +30,7 @@ public class Neighbours {
         for (int[] neighbourPosition : NEIGHBOUR_OFFSETS) {
             int row = neighbourPosition[0];
             int column = neighbourPosition[1];
-            if (row >= 0 && row < totalRows && column >= 0 && column < totalColumns) {
+            if (row >= 0 && column >= 0 && row < totalRows && column < totalColumns) {
                 validNeighboursCoordinates.add(new int[]{row, column});
             }
         }

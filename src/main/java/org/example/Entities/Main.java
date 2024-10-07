@@ -2,40 +2,51 @@ package org.example.Entities;
 
 import java.util.Scanner;
 
-public class Main {
+public class  Main{
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter number of rows: ");
+        System.out.print("Enter the number of rows: ");
         int rows = scanner.nextInt();
 
-        System.out.print("Enter number of columns: ");
+        System.out.print("Enter the number of columns: ");
         int cols = scanner.nextInt();
 
-        System.out.print("Enter seeding percentage (1-100): ");
-        int percentage = scanner.nextInt();
+        System.out.print("Enter the seeding percentage (1-100): ");
+        int seedingPercentage = scanner.nextInt();
 
         Grid grid = new Grid(rows, cols);
-        grid.seedRandomCells(percentage);
+
+        grid.seedRandomCells(rows, cols, seedingPercentage);
+
+        System.out.println("Initial Generation:");
         grid.printGrid();
 
-        scanner.nextLine();
-        while (true) {
-            System.out.println("Press Enter for the next generation or type 'exit' to quit.");
-            String input = scanner.nextLine();
-            if (input.equalsIgnoreCase("exit")) {
-                System.out.println("Simulation ended by the user.");
-                break;
-            }
+        boolean gameRunning = true;
 
-            grid.nextGeneration();
-            grid.printGrid();
+        int genration = 1;
+        try {
+            while (gameRunning) {
+                grid.nextGeneration();
+                System.out.println("Generation " + genration++ + ":");
+                grid.printGrid();
 
-            if (grid.countAliveCells() == 0) {
-                System.out.println("All cells are dead. Simulation ended.");
-                break;
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (grid.countAliveCells() == 0) {
+                    System.out.println("All cells are dead. Game Over!");
+                    gameRunning = false;
+                }
             }
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
         }
+
+
         scanner.close();
     }
 }

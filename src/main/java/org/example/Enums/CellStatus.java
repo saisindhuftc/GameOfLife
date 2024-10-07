@@ -1,10 +1,16 @@
 package org.example.Enums;
 
 public enum CellStatus {
-    ALIVE("*"), DEAD("-");
-    public final String symbol;
-    private CellStatus(String symbol){
-        this.symbol = symbol;
+    ALIVE("*"),
+    DEAD("-");
+
+    private final String symbol;
+
+    CellStatus(String stateString) {
+        this.symbol = stateString;
     }
 
+    public String getSymbol() {
+        return symbol;
+    }
 }

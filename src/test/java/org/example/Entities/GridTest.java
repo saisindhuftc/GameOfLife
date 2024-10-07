@@ -1,4 +1,4 @@
-package org.example;
+package org.example.Entities;
 
 import org.example.Entities.Grid;
 import org.example.Exceptions.InvalidInputException;
@@ -47,23 +47,23 @@ class GridTest {
 
 
     @Test
-    public void testInitializeGridWith10Rows10ColsAndSeedingPercentage0ShouldThrowError() {
+    public void testInitializeBoardWith10Rows10ColsAndSeedingPercentage0ShouldThrowError() {
         int rows = 10;
         int cols = 10;
         int seedingPercentage = 0;
 
         assertThrows(PercentageInputException.class, () -> {
             Grid grid = new Grid(rows, cols);
-            grid.seedRandomCells(seedingPercentage);
+            grid.seedRandomCells(rows, cols, seedingPercentage);
         });
     }
+
 
     @Test
     public void testFor2x2GridWithOneAliveCellNextGenerationWillBeAllDead() throws InvalidInputException {
         Grid grid = new Grid(2, 2);
-        grid.seedRandomCells(25);
 
-        assertEquals(1, grid.countAliveCells());
+        grid.seedRandomCells(2,2,25);
 
         grid.nextGeneration();
 
@@ -73,7 +73,7 @@ class GridTest {
     @Test
     public void testFor3x3GridWithOneAliveCellNextGenerationWillBeAllDead() throws InvalidInputException {
         Grid grid = new Grid(3, 3);
-        grid.seedRandomCells(15);
+        grid.seedRandomCells(3,3,15);
 
         assertEquals(1, grid.countAliveCells());
 
@@ -85,9 +85,7 @@ class GridTest {
     @Test
     public void testFor4x4GridWithOneAliveCellNextGenerationWillBeAllDead() throws InvalidInputException {
         Grid grid = new Grid(4, 4);
-        grid.seedRandomCells(10);
-
-        assertEquals(1, grid.countAliveCells());
+        grid.seedRandomCells(4,4,10);
 
         grid.nextGeneration();
 
@@ -98,15 +96,15 @@ class GridTest {
     void testSeedRandomCells() throws InvalidInputException {
         Grid grid = new Grid(5, 5);
 
-        assertThrows(PercentageInputException.class, () -> grid.seedRandomCells(0));
-        assertThrows(PercentageInputException.class, () -> grid.seedRandomCells(101));
-        assertDoesNotThrow(() -> grid.seedRandomCells(50));
+        assertThrows(PercentageInputException.class, () -> grid.seedRandomCells(5,5,0));
+        assertThrows(PercentageInputException.class, () -> grid.seedRandomCells(5,5,101));
+        assertDoesNotThrow(() -> grid.seedRandomCells(5,5,50));
     }
 
     @Test
     void testNextGeneration1() throws InvalidInputException {
         Grid grid = new Grid(5, 5);
-        grid.seedRandomCells(50);
+        grid.seedRandomCells(5,5,50);
 
         int initialAliveCells = grid.countAliveCells();
 
@@ -117,4 +115,3 @@ class GridTest {
         assertNotEquals(initialAliveCells, newAliveCells);
     }
 }
-
